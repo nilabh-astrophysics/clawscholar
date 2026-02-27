@@ -1,14 +1,32 @@
+# ============================
+# CLAWSCHOLAR WALLET MODULE
+# ============================
+
 from web3 import Web3
+import os
 
-# Reliable Sepolia RPC
-RPC_URL = "https://ethereum-sepolia-rpc.publicnode.com"
+# Use environment variables (important for deployment)
+SEPOLIA_RPC = os.getenv("SEPOLIA_RPC")
+WALLET_ADDRESS = os.getenv("WALLET_ADDRESS")
 
-w3 = Web3(Web3.HTTPProvider(RPC_URL))
+# Initialize Web3
+w3 = Web3(Web3.HTTPProvider(SEPOLIA_RPC))
 
-def is_connected():
-    return w3.is_connected()
 
-def get_balance(address):
-    balance_wei = w3.eth.get_balance(address)
-    balance_eth = w3.from_wei(balance_wei, 'ether')
-    return float(balance_eth)
+def get_balance():
+    """
+    Returns wallet balance in ETH.
+    Returns None if not connected.
+    """
+
+    if not w3.is_connected():
+        return None
+
+    try:
+        balance_wei = w3.eth.get_balance(WALLET_ADDRESS)
+        balance_eth = w3.from_wei(balance_wei, "ether")
+        return float(balance_eth)
+
+    except Exception as e:
+        print("Wallet error:", e)
+        return None
