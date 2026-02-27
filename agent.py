@@ -1,8 +1,7 @@
-import streamlit as st
-from agent import run_agent
 from wallet import get_balance
-from memory import load_state
-
+from memory import load_state, save_state
+from research import fetch_papers
+import random
 st.set_page_config(page_title="ClawScholar", layout="centered")
 
 st.title("🧠 ClawScholar")
