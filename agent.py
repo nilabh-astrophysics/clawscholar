@@ -1,5 +1,5 @@
 # =========================================
-# CLAWSCHOLAR AUTONOMOUS RESEARCH ENGINE v3
+# CLAWSCHOLAR AUTONOMOUS RESEARCH ENGINE v4
 # =========================================
 
 from wallet import get_balance
@@ -37,6 +37,55 @@ def innovation_score(balance: float) -> int:
 
 
 # =========================
+# ROADMAP GENERATOR
+# =========================
+
+def generate_roadmap(mode: str):
+    if mode == "basic":
+        return """
+🗺 Research Roadmap (Basic)
+
+Phase 1: Concept clarification  
+Phase 2: Literature consolidation  
+Phase 3: Identify key open questions  
+"""
+
+    if mode == "enhanced":
+        return """
+🗺 Research Roadmap (Enhanced)
+
+Phase 1: Formal theoretical modeling  
+Phase 2: Controlled simulation testing  
+Phase 3: Parameter sensitivity analysis  
+Phase 4: Draft experimental validation framework  
+"""
+
+    if mode == "advanced":
+        return """
+🗺 Research Roadmap (Advanced)
+
+Phase 1: Multi-model comparative study  
+Phase 2: Cross-disciplinary integration  
+Phase 3: High-performance computational modeling  
+Phase 4: Prototype experimental design  
+Phase 5: Publication & grant targeting  
+"""
+
+    if mode == "elite":
+        return """
+🗺 Research Roadmap (Elite Autonomous Strategy)
+
+Phase 1: Unified theoretical abstraction  
+Phase 2: Multi-lab collaborative validation  
+Phase 3: Funding allocation optimization  
+Phase 4: Autonomous research pipeline deployment  
+Phase 5: DAO-governed research expansion  
+"""
+
+    return ""
+
+
+# =========================
 # ANALYSIS GENERATORS
 # =========================
 
@@ -47,28 +96,24 @@ def generate_basic(paper):
 Title: {paper['title']}
 
 Overview:
-Concise explanation of the paper's objective and results.
-
-Upgrade treasury to unlock deeper research intelligence.
+Concise explanation of the research objective and outcome.
 """
 
 
-def generate_enhanced(paper, balance):
+def generate_enhanced(paper):
     return f"""
 🧠 ENHANCED MODE
 
 Title: {paper['title']}
 
-Structured Technical Summary:
+Structured Summary:
 • Core methodology  
-• Analytical implications  
-• Theoretical positioning  
-
-Treasury: {round(balance,6)} ETH
+• Theoretical implications  
+• Analytical observations  
 """
 
 
-def generate_advanced(papers, balance):
+def generate_advanced(papers):
     titles = [p["title"] for p in papers[:2]]
 
     return f"""
@@ -76,20 +121,17 @@ def generate_advanced(papers, balance):
 
 Papers:
 • {titles[0]}
-• {titles[1] if len(titles) > 1 else "-"}
+• {titles[1] if len(titles) > 1 else "-"}  
 
 Cross-Paper Insights:
 • Shared theoretical constructs  
 • Methodological contrasts  
 • Unified interpretation  
-
-Treasury: {round(balance,6)} ETH
 """
 
 
 def generate_elite(papers, balance):
     titles = [p["title"] for p in papers[:3]]
-
     score = innovation_score(balance)
 
     return f"""
@@ -100,17 +142,9 @@ Integrated Papers:
 • {titles[1] if len(titles) > 1 else "-"}
 • {titles[2] if len(titles) > 2 else "-"}
 
-Unified Research Framework:
-Cross-domain abstraction layer activated.
-
-Emergent Research Directions:
-• Experimental roadmap
-• Formal extensions
-• Computational scaling
+Unified Research Abstraction Layer Activated.
 
 Innovation Potential Score: {score}/100
-
-Treasury: {round(balance,6)} ETH
 """
 
 
@@ -151,14 +185,16 @@ def run_agent(title: str):
         return "No relevant research papers found."
 
     if mode == "elite":
-        output = generate_elite(papers, balance)
+        analysis = generate_elite(papers, balance)
     elif mode == "advanced":
-        output = generate_advanced(papers, balance)
+        analysis = generate_advanced(papers)
     elif mode == "enhanced":
-        output = generate_enhanced(papers[0], balance)
+        analysis = generate_enhanced(papers[0])
     else:
-        output = generate_basic(papers[0])
+        analysis = generate_basic(papers[0])
+
+    roadmap = generate_roadmap(mode)
 
     save_state(state)
 
-    return output
+    return analysis + "\n\n" + roadmap
