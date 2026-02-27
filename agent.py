@@ -176,23 +176,27 @@ Autonomous Research Capital Allocation Active.
 
 def run_agent(title: str):
 
+    # Load previous state safely
     try:
         state = load_state()
     except Exception:
         state = {"treasury": 0.0, "previous_balance": 0.0}
 
+    # Get live balance
     try:
         balance = get_balance()
         balance = float(balance) if balance else 0.0
     except Exception:
         return "❌ Blockchain connection failed."
 
+    # 🔥 Always determine mode from LIVE balance
     mode = determine_mode(balance)
 
     state["mode"] = mode
     state["treasury"] = balance
     state["previous_balance"] = balance
 
+    # Fetch research papers
     try:
         papers = fetch_papers(title)
     except Exception:
