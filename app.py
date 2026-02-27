@@ -15,7 +15,7 @@ st.markdown("---")
 # Blockchain Status
 st.header("🔗 On-Chain Status")
 
-balance = get_balance(WALLET_ADDRESS)
+balance = get_balance()
 state = load_state()
 
 st.metric("Wallet Balance (Sepolia ETH)", round(balance, 6))
