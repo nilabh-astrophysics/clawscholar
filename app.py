@@ -1,76 +1,69 @@
 import streamlit as st
-from agent import run_agent
+import pandas as pd
 from wallet import get_balance
-from memory import load_state
+from agent import run_agent, determine_mode
 
-# ---------------------------
-# Page Config
-# ---------------------------
-st.set_page_config(
-    page_title="ClawScholar",
-    layout="centered"
-)
+st.set_page_config(page_title="ClawScholar", layout="wide")
 
 st.title("🧠 ClawScholar")
 st.subheader("Autonomous Self-Funding Scientific AI Agent")
-st.markdown("---")
 
-# ---------------------------
-# On-Chain Status
-# ---------------------------
-st.header("🔗 On-Chain Status")
-
-# Safe balance fetch
-balance_display = "Not Connected"
+# =========================
+# TREASURY DASHBOARD
+# =========================
 
 try:
     balance = get_balance()
-
-    if balance is not None:
-        balance = float(balance)
-        balance_display = round(balance, 6)
-    else:
-        balance_display = "Unavailable"
-
-except Exception:
-    balance_display = "RPC Error"
-
-# Safe state load
-# Dynamic mode detection based on balance
-try:
-    balance = get_balance()
-    balance = float(balance) if balance is not None else 0.0
+    balance = float(balance) if balance else 0.0
 except Exception:
     balance = 0.0
 
-if balance >= 0.15:   # your demo threshold
-    mode_display = "advanced"
-else:
-    mode_display = "basic"
+mode = determine_mode(balance)
 
-st.metric("Wallet Balance (Sepolia ETH)", round(balance, 6))
-st.metric("Current Mode", mode_display)
+col1, col2 = st.columns(2)
+
+col1.metric("Treasury (Sepolia ETH)", round(balance, 6))
+col2.metric("Intelligence Tier", mode.upper())
+
+# =========================
+# CAPABILITY SCALING CHART
+# =========================
+
+tiers = {
+    "basic": 1,
+    "enhanced": 2,
+    "advanced": 3,
+    "elite": 4
+}
+
+data = pd.DataFrame({
+    "Capability Level": list(tiers.values())
+}, index=list(tiers.keys()))
+
+st.markdown("### 📈 Intelligence Scaling")
+st.bar_chart(data)
+
+if mode == "elite":
+    st.success("🔥 ELITE Research Engine Active")
+elif mode == "advanced":
+    st.success("🚀 Advanced Multi-Paper Mode Active")
+elif mode == "enhanced":
+    st.info("🧠 Enhanced Mode Active")
+else:
+    st.warning("🔹 Basic Mode")
 
 st.markdown("---")
 
-# ---------------------------
-# Research Section
-# ---------------------------
+# =========================
+# RESEARCH SECTION
+# =========================
+
 st.header("📚 Research Analysis")
 
-paper_title = st.text_input("Enter Research Paper Title")
+title = st.text_input("Enter Research Paper Topic")
 
 if st.button("Run ClawScholar"):
-    if not paper_title:
-        st.warning("Please enter a title.")
-    else:
-        try:
-            with st.spinner("Analyzing..."):
-                output = run_agent(paper_title)
-
-            st.success("Analysis Complete")
-            st.write(output)
-
-        except Exception as e:
-            st.error("Agent execution failed.")
-            st.caption("Check RPC / Ollama / dependencies.")
+    with st.spinner("ClawScholar is thinking..."):
+        result = run_agent(title)
+        st.success("Analysis Complete")
+        st.markdown(result)
