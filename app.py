@@ -6,7 +6,7 @@ from agent import run_agent, determine_mode
 st.set_page_config(page_title="ClawScholar", layout="wide")
 
 st.title("🧠 ClawScholar")
-st.subheader("Autonomous Self-Funding Scientific AI Agent")
+st.subheader("Autonomous Self-Funding Scientific AI Research Engine")
 
 # =========================
 # TREASURY DASHBOARD
@@ -15,7 +15,7 @@ st.subheader("Autonomous Self-Funding Scientific AI Agent")
 try:
     balance = get_balance()
     balance = float(balance) if balance else 0.0
-except Exception:
+except:
     balance = 0.0
 
 mode = determine_mode(balance)
@@ -26,44 +26,38 @@ col1.metric("Treasury (Sepolia ETH)", round(balance, 6))
 col2.metric("Intelligence Tier", mode.upper())
 
 # =========================
-# CAPABILITY SCALING CHART
+# SCALING VISUALIZATION
 # =========================
 
-tiers = {
-    "basic": 1,
-    "enhanced": 2,
-    "advanced": 3,
-    "elite": 4
-}
+tiers = ["basic", "enhanced", "advanced", "elite"]
+levels = [1, 2, 3, 4]
 
-data = pd.DataFrame({
-    "Capability Level": list(tiers.values())
-}, index=list(tiers.keys()))
+df = pd.DataFrame({"Capability Level": levels}, index=tiers)
 
-st.markdown("### 📈 Intelligence Scaling")
-st.bar_chart(data)
+st.markdown("### 📈 Intelligence Scaling Chart")
+st.bar_chart(df)
 
 if mode == "elite":
-    st.success("🔥 ELITE Research Engine Active")
+    st.success("🔥 ELITE Autonomous Research Mode Active")
 elif mode == "advanced":
     st.success("🚀 Advanced Multi-Paper Mode Active")
 elif mode == "enhanced":
-    st.info("🧠 Enhanced Mode Active")
+    st.info("🧠 Enhanced Reasoning Mode Active")
 else:
     st.warning("🔹 Basic Mode")
 
 st.markdown("---")
 
 # =========================
-# RESEARCH SECTION
+# RESEARCH EXECUTION
 # =========================
 
-st.header("📚 Research Analysis")
+st.header("📚 Research Analysis & Roadmap")
 
-title = st.text_input("Enter Research Paper Topic")
+title = st.text_input("Enter Research Topic")
 
 if st.button("Run ClawScholar"):
-    with st.spinner("ClawScholar is thinking..."):
+    with st.spinner("ClawScholar is analyzing and generating roadmap..."):
         result = run_agent(title)
-        st.success("Analysis Complete")
+        st.success("Autonomous Analysis Complete")
         st.markdown(result)
