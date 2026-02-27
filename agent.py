@@ -1,200 +1,94 @@
-# =========================================
-# CLAWSCHOLAR AUTONOMOUS RESEARCH ENGINE v4
-# =========================================
-
+import streamlit as st
+from agent import run_agent
 from wallet import get_balance
-from memory import load_state, save_state
-from research import fetch_papers
-import random
+from memory import load_state
+
+st.set_page_config(page_title="ClawScholar", layout="centered")
+
+st.title("🧠 ClawScholar")
+st.markdown("### Autonomous Research Capital Engine")
+st.markdown(
+    "ClawScholar detects research gaps, synthesizes literature, "
+    "and allocates blockchain treasury for scientific innovation."
+)
+
+st.markdown("---")
 
 # =========================
-# FUNDING THRESHOLDS
+# SAFE BALANCE FETCH
 # =========================
 
-UPGRADE_THRESHOLD = 0.15
-MULTI_PAPER_THRESHOLD = 0.25
-ELITE_THRESHOLD = 0.40
+balance_display = "Unavailable"
+balance_value = 0.0
 
-
-# =========================
-# MODE ENGINE
-# =========================
-
-def determine_mode(balance: float) -> str:
-    if balance >= ELITE_THRESHOLD:
-        return "elite"
-    elif balance >= MULTI_PAPER_THRESHOLD:
-        return "advanced"
-    elif balance >= UPGRADE_THRESHOLD:
-        return "enhanced"
-    return "basic"
-
-
-def innovation_score(balance: float) -> int:
-    base = 60
-    multiplier = min(balance * 100, 35)
-    return int(base + multiplier)
-
+try:
+    balance = get_balance()
+    if balance is not None:
+        balance_value = float(balance)
+        balance_display = round(balance_value, 6)
+except Exception:
+    balance_display = "RPC Error"
 
 # =========================
-# ROADMAP GENERATOR
+# SAFE STATE LOAD
 # =========================
 
-def generate_roadmap(mode: str):
-    if mode == "basic":
-        return """
-🗺 Research Roadmap (Basic)
+try:
+    state = load_state()
+    mode_display = state.get("mode", "basic")
+except Exception:
+    mode_display = "basic"
 
-Phase 1: Concept clarification  
-Phase 2: Literature consolidation  
-Phase 3: Identify key open questions  
-"""
+st.markdown("## 🔗 On-Chain Status")
+st.metric("Wallet Balance (Sepolia ETH)", balance_display)
+st.metric("Current Mode", mode_display.upper())
 
-    if mode == "enhanced":
-        return """
-🗺 Research Roadmap (Enhanced)
+st.markdown("### 💰 Treasury Intelligence")
 
-Phase 1: Formal theoretical modeling  
-Phase 2: Controlled simulation testing  
-Phase 3: Parameter sensitivity analysis  
-Phase 4: Draft experimental validation framework  
-"""
-
-    if mode == "advanced":
-        return """
-🗺 Research Roadmap (Advanced)
-
-Phase 1: Multi-model comparative study  
-Phase 2: Cross-disciplinary integration  
-Phase 3: High-performance computational modeling  
-Phase 4: Prototype experimental design  
-Phase 5: Publication & grant targeting  
-"""
-
-    if mode == "elite":
-        return """
-🗺 Research Roadmap (Elite Autonomous Strategy)
-
-Phase 1: Unified theoretical abstraction  
-Phase 2: Multi-lab collaborative validation  
-Phase 3: Funding allocation optimization  
-Phase 4: Autonomous research pipeline deployment  
-Phase 5: DAO-governed research expansion  
-"""
-
-    return ""
-
-
-# =========================
-# ANALYSIS GENERATORS
-# =========================
-
-def generate_basic(paper):
-    return f"""
-📘 BASIC MODE
-
-Title: {paper['title']}
-
-Overview:
-Concise explanation of the research objective and outcome.
-"""
-
-
-def generate_enhanced(paper):
-    return f"""
-🧠 ENHANCED MODE
-
-Title: {paper['title']}
-
-Structured Summary:
-• Core methodology  
-• Theoretical implications  
-• Analytical observations  
-"""
-
-
-def generate_advanced(papers):
-    titles = [p["title"] for p in papers[:2]]
-
-    return f"""
-🚀 ADVANCED MODE (Multi-Paper Synthesis)
-
-Papers:
-• {titles[0]}
-• {titles[1] if len(titles) > 1 else "-"}  
-
-Cross-Paper Insights:
-• Shared theoretical constructs  
-• Methodological contrasts  
-• Unified interpretation  
-"""
-
-
-def generate_elite(papers, balance):
-    titles = [p["title"] for p in papers[:3]]
-    score = innovation_score(balance)
-
-    return f"""
-🔥 ELITE RESEARCH ENGINE
-
-Integrated Papers:
-• {titles[0]}
-• {titles[1] if len(titles) > 1 else "-"}
-• {titles[2] if len(titles) > 2 else "-"}
-
-Unified Research Abstraction Layer Activated.
-
-Innovation Potential Score: {score}/100
-"""
-
-
-# =========================
-# MAIN AGENT
-# =========================
-
-def run_agent(title: str):
-
-    try:
-        state = load_state()
-    except Exception:
-        state = {"treasury": 0.0, "previous_balance": 0.0}
-
-    try:
-        balance = get_balance()
-        balance = float(balance) if balance else 0.0
-    except Exception:
-        return "❌ Blockchain connection failed."
-
-    previous_balance = state.get("previous_balance", 0.0)
-
-    if balance > previous_balance:
-        print(f"💰 New funding: {balance - previous_balance} ETH")
-
-    mode = determine_mode(balance)
-
-    state["mode"] = mode
-    state["treasury"] = balance
-    state["previous_balance"] = balance
-
-    try:
-        papers = fetch_papers(title)
-    except Exception:
-        return "❌ Failed to fetch research."
-
-    if not papers:
-        return "No relevant research papers found."
-
-    if mode == "elite":
-        analysis = generate_elite(papers, balance)
-    elif mode == "advanced":
-        analysis = generate_advanced(papers)
-    elif mode == "enhanced":
-        analysis = generate_enhanced(papers[0])
+if isinstance(balance_display, float):
+    if balance_value >= 0.40:
+        st.success("Elite Research Capital Capacity Activated")
+    elif balance_value >= 0.25:
+        st.info("Advanced Multi-Paper Synthesis Enabled")
+    elif balance_value >= 0.15:
+        st.warning("Enhanced Analytical Capacity")
     else:
-        analysis = generate_basic(papers[0])
+        st.warning("Basic Analytical Capacity")
 
-    roadmap = generate_roadmap(mode)
+st.markdown("---")
 
-    save_state(state)
+# =========================
+# RESEARCH INPUT
+# =========================
 
-    return analysis + "\n\n" + roadmap
+st.header("📚 Research Analysis")
+
+title = st.text_input("Enter Research Paper Title")
+
+if st.button("Run ClawScholar"):
+
+    if not title:
+        st.warning("Please enter a research title.")
+    else:
+        with st.spinner("Analyzing research ecosystem..."):
+            result = run_agent(title)
+
+        st.success("Autonomous Analysis Complete")
+
+        st.markdown(result)
+
+        # Depth Indicator
+        st.markdown("### 📊 Intelligence Depth")
+
+        if mode_display == "elite":
+            st.progress(100)
+        elif mode_display == "advanced":
+            st.progress(75)
+        elif mode_display == "enhanced":
+            st.progress(50)
+        else:
+            st.progress(25)
+
+        if "Innovation Potential Score" in result:
+            st.markdown("### 🚀 Innovation Index")
+            st.metric("Projected Innovation Impact", "High")
