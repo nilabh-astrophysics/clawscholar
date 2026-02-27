@@ -36,13 +36,19 @@ except Exception:
     balance_display = "RPC Error"
 
 # Safe state load
+# Dynamic mode detection based on balance
 try:
-    state = load_state()
-    mode_display = state.get("mode", "unknown")
+    balance = get_balance()
+    balance = float(balance) if balance is not None else 0.0
 except Exception:
-    mode_display = "unknown"
+    balance = 0.0
 
-st.metric("Wallet Balance (Sepolia ETH)", balance_display)
+if balance >= 0.15:   # your demo threshold
+    mode_display = "advanced"
+else:
+    mode_display = "basic"
+
+st.metric("Wallet Balance (Sepolia ETH)", round(balance, 6))
 st.metric("Current Mode", mode_display)
 
 st.markdown("---")
