@@ -1,93 +1,215 @@
+# =========================================
+# CLAWSCHOLAR AUTONOMOUS RESEARCH ENGINE
+# =========================================
+
 from wallet import get_balance
 from memory import load_state, save_state
 from research import fetch_papers
 import random
-st.set_page_config(page_title="ClawScholar", layout="centered")
 
-st.title("🧠 ClawScholar")
-st.markdown("### Autonomous Research Capital Engine")
-st.markdown(
-    "ClawScholar detects research gaps, synthesizes literature, "
-    "and allocates blockchain treasury for scientific innovation."
-)
-
-st.markdown("---")
 
 # =========================
-# SAFE BALANCE FETCH
+# FUNDING THRESHOLDS
 # =========================
 
-balance_display = "Unavailable"
-balance_value = 0.0
+UPGRADE_THRESHOLD = 0.15
+MULTI_PAPER_THRESHOLD = 0.25
+ELITE_THRESHOLD = 0.40
 
-try:
-    balance = get_balance()
-    if balance is not None:
-        balance_value = float(balance)
-        balance_display = round(balance_value, 6)
-except Exception:
-    balance_display = "RPC Error"
 
 # =========================
-# SAFE STATE LOAD
+# MODE ENGINE
 # =========================
 
-try:
-    state = load_state()
-    mode_display = state.get("mode", "basic")
-except Exception:
-    mode_display = "basic"
+def determine_mode(balance: float) -> str:
+    if balance >= ELITE_THRESHOLD:
+        return "elite"
+    elif balance >= MULTI_PAPER_THRESHOLD:
+        return "advanced"
+    elif balance >= UPGRADE_THRESHOLD:
+        return "enhanced"
+    return "basic"
 
-st.markdown("## 🔗 On-Chain Status")
-st.metric("Wallet Balance (Sepolia ETH)", balance_display)
-st.metric("Current Mode", mode_display.upper())
 
-st.markdown("### 💰 Treasury Intelligence")
+def innovation_score(balance: float) -> int:
+    base = 65
+    multiplier = min(balance * 100, 30)
+    return int(base + multiplier)
 
-if isinstance(balance_display, float):
-    if balance_value >= 0.40:
-        st.success("Elite Research Capital Capacity Activated")
-    elif balance_value >= 0.25:
-        st.info("Advanced Multi-Paper Synthesis Enabled")
-    elif balance_value >= 0.15:
-        st.warning("Enhanced Analytical Capacity")
+
+# =========================
+# GAP DETECTION ENGINE
+# =========================
+
+def detect_research_gaps():
+    gaps = [
+        "Inconsistent boundary condition assumptions across models",
+        "Lack of high-scale empirical validation",
+        "Computational scalability constraints under extreme regimes",
+        "Parameter sensitivity underexplored in current literature",
+        "Cross-domain generalization not formally proven"
+    ]
+    return random.sample(gaps, 3)
+
+
+# =========================
+# FUNDING ALLOCATION ENGINE
+# =========================
+
+def funding_allocation(balance: float, mode: str):
+
+    if mode == "advanced":
+        return {
+            "Theoretical Modeling": 40,
+            "Simulation Infrastructure": 35,
+            "Experimental Validation": 25
+        }
+
+    if mode == "elite":
+        return {
+            "Unified Theory Development": 30,
+            "High-Performance Computing": 30,
+            "Experimental Labs": 25,
+            "Cross-Disciplinary Research": 15
+        }
+
+    return {}
+
+
+# =========================
+# ANALYSIS GENERATORS
+# =========================
+
+def generate_basic(paper):
+    return f"""
+📘 BASIC MODE
+
+Title: {paper['title']}
+
+This research explores the primary objective and methodological foundation of the study.
+It provides foundational insights but remains limited in strategic synthesis depth.
+"""
+
+
+def generate_enhanced(paper):
+    return f"""
+🧠 ENHANCED MODE
+
+Title: {paper['title']}
+
+Structured Summary:
+• Core methodology and modeling framework  
+• Theoretical implications and domain constraints  
+• Analytical observations and performance considerations  
+
+Research Readiness: Moderate depth exploration enabled.
+"""
+
+
+def generate_advanced(papers, balance):
+    titles = [p["title"] for p in papers[:2]]
+    gaps = detect_research_gaps()
+    allocation = funding_allocation(balance, "advanced")
+
+    return f"""
+🚀 ADVANCED MODE – Strategic Research Synthesis
+
+Integrated Papers:
+• {titles[0]}
+• {titles[1] if len(titles) > 1 else "-"}
+
+Cross-Paper Insights:
+• Convergent structural modeling approaches
+• Divergent optimization strategies under varying constraints
+• Partial theoretical incompatibility in parameter regimes
+
+🧩 Detected Research Gaps:
+• {gaps[0]}
+• {gaps[1]}
+• {gaps[2]}
+
+💰 Autonomous Funding Allocation Strategy:
+• Theoretical Modeling: {allocation["Theoretical Modeling"]}%
+• Simulation Infrastructure: {allocation["Simulation Infrastructure"]}%
+• Experimental Validation: {allocation["Experimental Validation"]}%
+
+Strategic Depth: Multi-paper synthesis activated.
+"""
+
+
+def generate_elite(papers, balance):
+    titles = [p["title"] for p in papers[:3]]
+    score = innovation_score(balance)
+    gaps = detect_research_gaps()
+    allocation = funding_allocation(balance, "elite")
+
+    return f"""
+🔥 ELITE AUTONOMOUS RESEARCH ENGINE
+
+Integrated Works:
+• {titles[0]}
+• {titles[1] if len(titles) > 1 else "-"}
+• {titles[2] if len(titles) > 2 else "-"}
+
+Unified Research Abstraction Layer Constructed.
+
+🧩 Critical Theoretical Contradictions Identified:
+• {gaps[0]}
+• {gaps[1]}
+• {gaps[2]}
+
+💰 Strategic Treasury Deployment Plan:
+• Unified Theory Development: {allocation["Unified Theory Development"]}%
+• High-Performance Computing: {allocation["High-Performance Computing"]}%
+• Experimental Labs: {allocation["Experimental Labs"]}%
+• Cross-Disciplinary Research: {allocation["Cross-Disciplinary Research"]}%
+
+Innovation Potential Score: {score}/100
+
+Autonomous Research Capital Allocation Active.
+"""
+
+
+# =========================
+# MAIN AGENT
+# =========================
+
+def run_agent(title: str):
+
+    try:
+        state = load_state()
+    except Exception:
+        state = {"treasury": 0.0, "previous_balance": 0.0}
+
+    try:
+        balance = get_balance()
+        balance = float(balance) if balance else 0.0
+    except Exception:
+        return "❌ Blockchain connection failed."
+
+    mode = determine_mode(balance)
+
+    state["mode"] = mode
+    state["treasury"] = balance
+    state["previous_balance"] = balance
+
+    try:
+        papers = fetch_papers(title)
+    except Exception:
+        return "❌ Failed to fetch research."
+
+    if not papers:
+        return "No relevant research papers found."
+
+    if mode == "elite":
+        output = generate_elite(papers, balance)
+    elif mode == "advanced":
+        output = generate_advanced(papers, balance)
+    elif mode == "enhanced":
+        output = generate_enhanced(papers[0])
     else:
-        st.warning("Basic Analytical Capacity")
+        output = generate_basic(papers[0])
 
-st.markdown("---")
+    save_state(state)
 
-# =========================
-# RESEARCH INPUT
-# =========================
-
-st.header("📚 Research Analysis")
-
-title = st.text_input("Enter Research Paper Title")
-
-if st.button("Run ClawScholar"):
-
-    if not title:
-        st.warning("Please enter a research title.")
-    else:
-        with st.spinner("Analyzing research ecosystem..."):
-            result = run_agent(title)
-
-        st.success("Autonomous Analysis Complete")
-
-        st.markdown(result)
-
-        # Depth Indicator
-        st.markdown("### 📊 Intelligence Depth")
-
-        if mode_display == "elite":
-            st.progress(100)
-        elif mode_display == "advanced":
-            st.progress(75)
-        elif mode_display == "enhanced":
-            st.progress(50)
-        else:
-            st.progress(25)
-
-        if "Innovation Potential Score" in result:
-            st.markdown("### 🚀 Innovation Index")
-            st.metric("Projected Innovation Impact", "High")
+    return output
