@@ -1,63 +1,94 @@
 import streamlit as st
-import pandas as pd
+from agent import run_agent
 from wallet import get_balance
-from agent import run_agent, determine_mode
+from memory import load_state
 
-st.set_page_config(page_title="ClawScholar", layout="wide")
+st.set_page_config(page_title="ClawScholar", layout="centered")
 
 st.title("🧠 ClawScholar")
-st.subheader("Autonomous Self-Funding Scientific AI Research Engine")
-
-# =========================
-# TREASURY DASHBOARD
-# =========================
-
-try:
-    balance = get_balance()
-    balance = float(balance) if balance else 0.0
-except:
-    balance = 0.0
-
-mode = determine_mode(balance)
-
-col1, col2 = st.columns(2)
-
-col1.metric("Treasury (Sepolia ETH)", round(balance, 6))
-col2.metric("Intelligence Tier", mode.upper())
-
-# =========================
-# SCALING VISUALIZATION
-# =========================
-
-tiers = ["basic", "enhanced", "advanced", "elite"]
-levels = [1, 2, 3, 4]
-
-df = pd.DataFrame({"Capability Level": levels}, index=tiers)
-
-st.markdown("### 📈 Intelligence Scaling Chart")
-st.bar_chart(df)
-
-if mode == "elite":
-    st.success("🔥 ELITE Autonomous Research Mode Active")
-elif mode == "advanced":
-    st.success("🚀 Advanced Multi-Paper Mode Active")
-elif mode == "enhanced":
-    st.info("🧠 Enhanced Reasoning Mode Active")
-else:
-    st.warning("🔹 Basic Mode")
+st.markdown("### Autonomous Research Capital Engine")
+st.markdown(
+    "ClawScholar detects research gaps, synthesizes literature, "
+    "and allocates blockchain treasury for scientific innovation."
+)
 
 st.markdown("---")
 
 # =========================
-# RESEARCH EXECUTION
+# SAFE BALANCE FETCH
 # =========================
 
-st.header("📚 Research Analysis & Roadmap")
+balance_display = "Unavailable"
+balance_value = 0.0
 
-title = st.text_input("Enter Research Topic")
+try:
+    balance = get_balance()
+    if balance is not None:
+        balance_value = float(balance)
+        balance_display = round(balance_value, 6)
+except Exception:
+    balance_display = "RPC Error"
+
+# =========================
+# SAFE STATE LOAD
+# =========================
+
+try:
+    state = load_state()
+    mode_display = state.get("mode", "basic")
+except Exception:
+    mode_display = "basic"
+
+st.markdown("## 🔗 On-Chain Status")
+st.metric("Wallet Balance (Sepolia ETH)", balance_display)
+st.metric("Current Mode", mode_display.upper())
+
+st.markdown("### 💰 Treasury Intelligence")
+
+if isinstance(balance_display, float):
+    if balance_value >= 0.40:
+        st.success("Elite Research Capital Capacity Activated")
+    elif balance_value >= 0.25:
+        st.info("Advanced Multi-Paper Synthesis Enabled")
+    elif balance_value >= 0.15:
+        st.warning("Enhanced Analytical Capacity")
+    else:
+        st.warning("Basic Analytical Capacity")
+
+st.markdown("---")
+
+# =========================
+# RESEARCH INPUT
+# =========================
+
+st.header("📚 Research Analysis")
+
+title = st.text_input("Enter Research Paper Title")
 
 if st.button("Run ClawScholar"):
-    with st.spinner("ClawScholar is analyzing and generating roadmap..."):
-        result = run_agent(title)
+
+    if not title:
+        st.warning("Please enter a research title.")
+    else:
+        with st.spinner("Analyzing research ecosystem..."):
+            result = run_agent(title)
+
         st.success("Autonomous Analysis Complete")
+
         st.markdown(result)
+
+        # Depth Indicator
+        st.markdown("### 📊 Intelligence Depth")
+
+        if mode_display == "elite":
+            st.progress(100)
+        elif mode_display == "advanced":
+            st.progress(75)
+        elif mode_display == "enhanced":
+            st.progress(50)
+        else:
+            st.progress(25)
+
+        if "Innovation Potential Score" in result:
+            st.markdown("### 🚀 Innovation Index")
+            st.metric("Projected Innovation Impact", "High")
