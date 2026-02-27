@@ -7,7 +7,7 @@ from memory import load_state, save_state
 from research import fetch_papers, summarize_paper
 
 # Upgrade threshold (in ETH)
-UPGRADE_THRESHOLD = 0.1
+UPGRADE_THRESHOLD = 0.15
 
 
 def run_agent(title):
