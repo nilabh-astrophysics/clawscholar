@@ -1,460 +1,198 @@
+# ClawScholar
 
+## Autonomous Research Capital Engine (OpenClaw-Compatible Agent)
 
-\# 🧠 ClawScholar  
+ClawScholar is a treasury-aware autonomous research agent that analyzes scientific domains, detects theoretical gaps, generates structured research roadmaps, and dynamically scales its analytical depth based on on-chain capital availability.
 
-\## Autonomous Self-Funding Scientific AI Agent
-
-Built for SURGE × OpenClaw Hackathon 2026
-
-
-
-ClawScholar is an AI research agent that owns a blockchain wallet, monitors its own on-chain funding, and dynamically upgrades its intelligence level based on economic input.
-
-
-
-It combines:
-
-
-
-\* 🧠 Local AI inference (Ollama)
-
-\* 🔗 Web3 wallet integration (Sepolia testnet)
-
-\* 💰 On-chain payment detection
-
-\* 🗂 Persistent memory (JSON state)
-
-\* 📄 Research summarization + advanced analysis
-
-
-
-This project demonstrates a new class of AI systems: \*\*economically autonomous agents\*\*.
-
-
+The system demonstrates how capital-governed intelligence can operate within an OpenClaw-compatible runtime architecture.
 
 ---
 
+## 1. Problem Statement
 
+Scientific funding and research prioritization suffer from:
 
-\## 🚀 Vision
+* Manual, committee-based evaluation
+* Institutional bias
+* Lack of adaptive capital allocation
+* Absence of autonomous research governance
 
+There is no agent system that:
 
+* Detects research gaps autonomously
+* Evaluates analytical depth relative to resource constraints
+* Scales reasoning based on treasury availability
+* Generates capital-aware funding roadmaps
 
-Traditional AI tools respond to prompts.
-
-
-
-ClawScholar goes further.
-
-
-
-It:
-
-
-
-\* Owns a wallet
-
-\* Detects real blockchain payments
-
-\* Tracks its treasury
-
-\* Upgrades intelligence mode automatically
-
-\* Persists its internal state
-
-
-
-This is a prototype for \*\*self-funding scientific AI entities\*\*.
-
-
+ClawScholar addresses this gap.
 
 ---
 
+## 2. System Overview
 
+ClawScholar is composed of five modular layers:
 
-\## 🏗 Architecture
+### 2.1 User Interface Layer
 
+* Built with Streamlit
+* Accepts research topic input
+* Displays treasury status
+* Displays dynamically scaled intelligence output
 
+### 2.2 Agent Core (`agent.py`)
 
+* Multi-step reasoning pipeline
+* Structured research analysis generation
+* Mode-based intelligence branching
+* Autonomous roadmap construction
+
+### 2.3 Treasury Layer (`wallet.py`)
+
+* Reads Sepolia ETH wallet balance
+* Determines intelligence mode thresholds
+* Enables automatic mode scaling
+
+### 2.4 Memory Layer (`memory.py`)
+
+* Stores previous analytical states
+* Persists intelligence mode
+* Enables continuity across executions
+
+### 2.5 OpenClaw Adapter (`openclaw_adapter.py`)
+
+Provides structured runtime entry point:
+
+```python
+def openclaw_entry(input_payload: dict) -> dict:
 ```
 
-User → ClawScholar Agent → Research Analysis
+This enables integration into OpenClaw’s execution model as:
 
-&nbsp;                        ↓
-
-&nbsp;                   Web3 Wallet
-
-&nbsp;                        ↓
-
-&nbsp;               On-chain Balance Check
-
-&nbsp;                        ↓
-
-&nbsp;             Intelligence Mode Upgrade
-
-&nbsp;                        ↓
-
-&nbsp;                  Persistent Memory
-
-```
-
-
+* A modular research skill
+* A treasury-aware governance agent
+* A runtime-compatible autonomous module
 
 ---
 
+## 3. Intelligence Modes (Capital-Driven Scaling)
 
+ClawScholar automatically upgrades analytical depth based on treasury size.
 
-\## ⚙️ Core Features
+| Mode     | Trigger         | Capabilities                                                               |
+| -------- | --------------- | -------------------------------------------------------------------------- |
+| Basic    | Low Treasury    | Structured research summary                                                |
+| Enhanced | Medium Treasury | Analytical depth + research roadmap                                        |
+| Elite    | High Treasury   | Contradiction detection + phased funding strategy + cross-domain synthesis |
 
+Mode upgrades occur automatically without manual intervention.
 
-
-\### 1️⃣ Research Intelligence
-
-
-
-\* Simplifies complex research papers
-
-\* Generates structured analysis
-
-\* Produces advanced output when treasury threshold is reached
-
-
-
-\### 2️⃣ Blockchain Integration
-
-
-
-\* Connects to Ethereum Sepolia
-
-\* Reads real wallet balance
-
-\* Detects new incoming payments
-
-\* Updates internal treasury
-
-
-
-\### 3️⃣ Autonomous Mode Switching
-
-
-
-\* Basic Mode → Lightweight summaries
-
-\* Advanced Mode → Deep technical analysis
-
-\* Mode upgrade triggered by funding
-
-
-
-\### 4️⃣ Persistent State
-
-
-
-Stored in `state.json`:
-
-
-
-```json
-
-{
-
-&nbsp; "mode": "advanced",
-
-&nbsp; "treasury": 0.172,
-
-&nbsp; "previous\_balance": 0.172
-
-}
-
-```
-
-
-
-The agent remembers its financial history.
-
-
+This demonstrates capital-dependent reasoning expansion.
 
 ---
 
+## 4. Autonomous Capabilities
 
+The agent performs:
 
-\## 📂 Project Structure
+* Multi-step reasoning
+* Research domain decomposition
+* Theoretical constraint identification
+* Parameter sensitivity awareness
+* Scalability risk detection
+* Phased experimental validation roadmap generation
+* Cross-domain abstraction synthesis (Elite mode)
 
-
-
-```
-
-clawscholar/
-
-│
-
-├── agent.py        # Main autonomous agent logic
-
-├── wallet.py       # Web3 balance reader
-
-├── memory.py       # Persistent state manager
-
-├── research.py     # AI summarization module
-
-├── requirements.txt
-
-└── README.md
-
-```
-
-
+The output is structured and deterministic per mode.
 
 ---
 
+## 5. OpenClaw Alignment
 
+ClawScholar is designed to align with OpenClaw’s principles:
 
-\## 🔧 Installation
+* Modular agent architecture
+* Structured tool interface
+* Local-first execution model
+* Autonomy without cloud dependency
+* Runtime-compatible entry point
 
+The OpenClaw adapter enables structured invocation and integration into OpenClaw’s execution layer.
 
+No UI dependency exists in the agent core.
 
-\### 1️⃣ Clone repository
+---
 
+## 6. SURGE Compatibility (Design-Ready)
 
+ClawScholar architecture supports future integration with SURGE skill infrastructure:
 
-```
+* Tokenized research tracks
+* Autonomous treasury allocation
+* On-chain funding logic
+* Governance-ready capital execution
 
-git clone https://github.com/nilabh-astrophysics/clawscholar.git
+The current implementation demonstrates treasury-aware intelligence scaling as a prototype of decentralized research capital governance.
 
+---
+
+## 7. Execution Flow
+
+1. Wallet balance is read (Sepolia)
+2. Mode is automatically determined
+3. User inputs research topic
+4. Agent executes structured reasoning
+5. Output depth scales with treasury
+6. Memory state is persisted
+
+---
+
+## 8. Local Execution
+
+```bash
+git clone https://github.com/YOUR-USERNAME/clawscholar.git
 cd clawscholar
-
-```
-
-
-
----
-
-
-
-\### 2️⃣ Install dependencies
-
-
-
-```
-
 pip install -r requirements.txt
-
+streamlit run app.py
 ```
 
-
-
----
-
-
-
-\### 3️⃣ Install Ollama
-
-
-
-Download from:
-
-
-
-\[https://ollama.com](https://ollama.com)
-
-
-
-Then pull a model:
-
-
-
-```
-
-ollama pull phi3
-
-```
-
-
+Replace `YOUR-USERNAME` with your GitHub username.
 
 ---
 
+## 9. Demonstrated Autonomy
 
+This project demonstrates:
 
-\## ▶️ Run the Agent
-
-
-
-```
-
-python agent.py
-
-```
-
-
-
-You should see:
-
-
-
-```
-
-Checking blockchain connection...
-
-✅ Connected to Sepolia
-
-On-chain Balance: 0.17214706
-
-New payment detected!
-
-Upgrading Intelligence Mode...
-
-```
-
-
+* Adaptive intelligence scaling
+* Multi-step reasoning
+* Persistent memory
+* Treasury-aware execution
+* Modular runtime compatibility
+* OpenClaw-aligned architecture
 
 ---
 
+## 10. Research Vision
 
+ClawScholar serves as a prototype for:
 
-\## 🔗 Blockchain Setup
+Autonomous Research Capital Markets
 
+Where:
 
+* AI agents detect knowledge gaps
+* Treasury governs reasoning depth
+* Capital allocation becomes programmable
+* Research prioritization becomes decentralized
 
-The agent connects to:
+This system is not a summarizer.
 
-
-
-\* Ethereum Sepolia Testnet
-
-\* A wallet address defined inside `agent.py`
-
-\* RPC endpoint via Web3
-
-
-
-When balance increases:
-
-
-
-\* Treasury updates
-
-\* Mode changes
-
-\* Analysis depth increases
-
-
+It is a capital-governed research intelligence engine.
 
 ---
 
-
-
-\## 🧪 Example Output
-
-
-
-\*\*Basic Mode\*\*
-
-
-
-> Simple summary of research paper in accessible language.
-
-
-
-\*\*Advanced Mode\*\*
-
-
-
-> Structured technical breakdown with deeper reasoning.
-
-
-
----
-
-
-
-\## 🧩 Why This Matters
-
-
-
-ClawScholar demonstrates:
-
-
-
-\* AI agents can own wallets
-
-\* AI can respond to economic signals
-
-\* Funding can dynamically influence intelligence
-
-\* Agents can persist memory across sessions
-
-
-
-This architecture hints toward:
-
-
-
-\* Autonomous digital researchers
-
-\* Self-funding AI services
-
-\* Decentralized agent ecosystems
-
-
-
----
-
-
-
-\## 🌍 Future Work
-
-
-
-\* Multi-agent collaboration
-
-\* On-chain micropayments
-
-\* Decentralized deployment
-
-\* Web interface dashboard
-
-\* Token-gated intelligence tiers
-
-
-
----
-
-
-
-\## 🏆 Hackathon Submission Category
-
-
-
-Autonomous AI × Web3 Integration
-
-Self-Funding Intelligent Agent Prototype
-
-
-
----
-
-
-
-\## 📜 License
-
-
-
-MIT License
-
-
-
----
-
-
-
-
-
-ClawScholar is not just an AI assistant.
-
-It is an economically aware digital research entity.
-
-Intelligence that evolves with value.
-
-
-
-
-
+## Status
+
+Fully functional prototype
+OpenClaw-compatible architecture
+Treasury-aware autonomous scaling implemented.
